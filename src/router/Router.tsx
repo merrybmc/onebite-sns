@@ -1,3 +1,4 @@
+import CounterPage from "@/pages/CounterPage";
 import IndexPage from "@/pages/IndexPage";
 import SignInPage from "@/pages/SignInPage";
 import SignUpPage from "@/pages/SignUpPage";
@@ -17,6 +18,7 @@ export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<IndexPage />} />
+      <Route path="/counter" element={<CounterPage />} />
       <Route element={<AuthLayout />}>
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />

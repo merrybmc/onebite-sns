@@ -1,20 +1,18 @@
-// 동기
-// 하나의 작업이 실행되는 동안
-// 다른 작업을 수행하지 않는 방식
-// 하나의 작업이 완료될 때까지 다른 작업을 실행하지 않음
-// 순차적인 방식
+function solution(my_string) {
+  let newStrArray = my_string.split(""); // 문자열을 ''로 각각 분리 ( 배열로 ) -> 숫자는 == 연산자로 추려내기
+  let resultArray = [];
 
-console.log(1);
-console.log(2);
-console.log(3);
-console.log(4);
+  for (i = 0; i < newStrArray.length; i++) {
+    if (newStrArray[i] == Number(newStrArray[i])) {
+      resultArray.push(Number(newStrArray[i]));
+    }
+  }
+  resultArray.sort((a, b) => a - b);
+  return resultArray;
+}
 
-// 비동기
-// 다른 작업이 종료되기를 기다리지 않고
-// 다음 작업을 병렬적으로 수행하는 방식
-// 병렬적인 방식
+console.log(solution("hi12392"));
 
-// 자바스크립트는 기본적으로 비동기 작업을 수행하지 못하고 동기적인 방식으로 작업을 처리
-// 작업을 수행하는 주체를 스레드라 부르며
-// 자바스크립트는 기본적으로 싱글 스레드 언어이다.
-// 자바스크립트는 멀티스레드로 작업을 처리하지 못하며 하나의 스레드에서 여러개의 작업을 처리해야한다.
+// typeof
+// string 값만 골라내서 없애기
+// 숫자 오름차순 해서 리스트로 반환
