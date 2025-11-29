@@ -4,6 +4,7 @@ import {
   subscribeWithSelector,
   persist,
   createJSONStorage,
+  devtools,
 } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
@@ -85,37 +86,38 @@ type Store = {
 // );
 
 export const useCountStore = create(
-  persist(
-    subscribeWithSelector(
-      immer(
-        combine({ count: 0 }, (set, get) => ({
-          actions: {
-            increase: () => {
-              set((state) => {
-                state.count += 1;
-              });
+  devtools(
+    persist(
+      subscribeWithSelector(
+        immer(
+          combine({ count: 0 }, (set, get) => ({
+            actions: {
+              increase: () => {
+                set((state) => {
+                  state.count += 1;
+                });
+              },
+              decrease: () => {
+                set((state) => {
+                  state.count -= 1;
+                });
+              },
             },
-            decrease: () => {
-              set((state) => {
-                state.count -= 1;
-              });
-            },
-          },
-        })),
+          })),
+        ),
       ),
+      {
+        name: "countStore",
+
+        partialize: (store) => ({
+          count: store.count,
+        }),
+
+        storage: createJSONStorage(() => sessionStorage),
+      },
     ),
     {
-      // storage key name
       name: "countStore",
-
-      // storage value
-      partialize: (store) => ({
-        count: store.count,
-      }),
-
-      // 기본적으로 localStorage에 저장
-      // session Storage에 저장하는 방법
-      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );
