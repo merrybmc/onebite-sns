@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { combine } from "zustand/middleware";
+import { combine, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 type Store = {
@@ -37,23 +37,76 @@ type Store = {
 // Store 내부의 특정 State를 업데이트할 때 직접적으로 접근해서 값을 바꾸는게 아닌
 // 변경될 값을 포함한 새로운 객체를 만들어서 전달하여 업데이트하는 방식
 // 업데이트해야할 데이터의 구조가 복잡해질경우 사용
+// export const useCountStore = create(
+//   immer(
+//     combine({ count: 0 }, (set, get) => ({
+//       actions: {
+//         increase: () => {
+//           set((state) => {
+//             state.count += 1;
+//           });
+//         },
+//         decrease: () => {
+//           set((state) => {
+//             state.count -= 1;
+//           });
+//         },
+//       },
+//     })),
+//   ),
+// );
+
+// Store의 특정 값을 구독함으로 값이 변경될 때마다 어떠한 기능을 추가로 수행
+// useEffect와 비슷한 기능을 하는 middleware
 export const useCountStore = create(
-  immer(
-    combine({ count: 0 }, (set, get) => ({
-      actions: {
-        increase: () => {
-          set((state) => {
-            state.count += 1;
-          });
+  subscribeWithSelector(
+    immer(
+      combine({ count: 0 }, (set, get) => ({
+        actions: {
+          increase: () => {
+            set((state) => {
+              state.count += 1;
+            });
+          },
+          decrease: () => {
+            set((state) => {
+              state.count -= 1;
+            });
+          },
         },
-        decrease: () => {
-          set((state) => {
-            state.count -= 1;
-          });
-        },
-      },
-    })),
+      })),
+    ),
   ),
+);
+
+// 첫 번째 인수로 Store의 어떠한 값을 구독할건지를 결정하는 Selector 함수를 포함
+// 두 번째 인수는 첫 번째 인수로 전달된 값이 변경될 때마다 실행되는 기능
+// 콜백함수로 전달하며 인수는 첫 번째 인수는 변경된 이후의 구독한 값이 할당됨
+// 두 번째 인수로 변경되기 전의 구독한 값이 할당됨
+// 두 번째 인수의 콜백함수를 Listner 라고 표현한다.
+// 로그인 후 마이페이지로 이동하는 등의 사이드 이펙트에 많이 활용됨
+useCountStore.subscribe(
+  (store) => store.count,
+  (count, prevCount) => {
+    // Listner
+    console.log(count, prevCount);
+
+    // 현재 Store를 불러오거나
+    // 현재 Store의 특정 값을 업데이트 지원
+
+    // 해당 Store의 프로퍼티를 반환
+    const store = useCountStore.getState();
+    // 현재 경우 store의 count를 구독하고 있어서 무한루프에 빠지게 됨
+    // const myCount = store.count;
+    // store.actions.increase();
+    // store.actions.decrease();
+
+    // 현재 Store의 특정 값을 업데이트
+    useCountStore.setState((store) => {
+      // 현재 경우 store의 count를 구독하고 있어서 무한루프에 빠지게 됨
+      // store.count += 1;
+    });
+  },
 );
 
 // export const useCountStore = create<Store>((set, get) => {
