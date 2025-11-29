@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { combine, subscribeWithSelector } from "zustand/middleware";
+import {
+  combine,
+  subscribeWithSelector,
+  persist,
+  createJSONStorage,
+} from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 type Store = {
@@ -58,24 +63,60 @@ type Store = {
 
 // Store의 특정 값을 구독함으로 값이 변경될 때마다 어떠한 기능을 추가로 수행
 // useEffect와 비슷한 기능을 하는 middleware
+// export const useCountStore = create(
+//   subscribeWithSelector(
+//     immer(
+//       combine({ count: 0 }, (set, get) => ({
+//         actions: {
+//           increase: () => {
+//             set((state) => {
+//               state.count += 1;
+//             });
+//           },
+//           decrease: () => {
+//             set((state) => {
+//               state.count -= 1;
+//             });
+//           },
+//         },
+//       })),
+//     ),
+//   ),
+// );
+
 export const useCountStore = create(
-  subscribeWithSelector(
-    immer(
-      combine({ count: 0 }, (set, get) => ({
-        actions: {
-          increase: () => {
-            set((state) => {
-              state.count += 1;
-            });
+  persist(
+    subscribeWithSelector(
+      immer(
+        combine({ count: 0 }, (set, get) => ({
+          actions: {
+            increase: () => {
+              set((state) => {
+                state.count += 1;
+              });
+            },
+            decrease: () => {
+              set((state) => {
+                state.count -= 1;
+              });
+            },
           },
-          decrease: () => {
-            set((state) => {
-              state.count -= 1;
-            });
-          },
-        },
-      })),
+        })),
+      ),
     ),
+    {
+      // storage key name
+      name: "countStore",
+
+      // storage value
+      partialize: (store) => ({
+        count: store.count,
+      }),
+
+      // 기본적으로 localStorage에 저장
+      // session Storage에 저장하는 방법
+      storage: createJSONStorage(() => sessionStorage),
+    },
   ),
 );
 
