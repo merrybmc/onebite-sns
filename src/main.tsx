@@ -8,7 +8,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // 모든 서버 상태를 보관하는 일종의 Store
 // 서버 상태와 관련된 값들이 보관됨
 // API 요청의 응답값, 캐싱값 등 다양한 값
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+      gcTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
