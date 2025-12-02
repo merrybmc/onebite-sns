@@ -35,7 +35,7 @@ import {
 } from "./components/ui/alert-dialog";
 import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
 import { ChefHat } from "lucide-react";
-import Router from "./router/router";
+import Router from "./router/Router";
 
 function App() {
   const isActive = true;

@@ -2,6 +2,7 @@ import CounterPage from "@/pages/CounterPage";
 import IndexPage from "@/pages/IndexPage";
 import SignInPage from "@/pages/SignInPage";
 import SignUpPage from "@/pages/SignUpPage";
+import TodoDetailPage from "@/pages/TodoDetailPage";
 import TodoListPage from "@/pages/TodoListPage";
 import { Outlet, Route, Routes } from "react-router";
 
@@ -20,6 +21,7 @@ export default function Router() {
     <Routes>
       <Route path="/" element={<IndexPage />} />
       <Route path="/counter" element={<CounterPage />} />
+      <Route path="todolist/:id" element={<TodoDetailPage />} />
       <Route element={<AuthLayout />}>
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
