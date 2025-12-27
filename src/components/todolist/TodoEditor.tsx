@@ -3,31 +3,12 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { createTodo } from "@/api/createTodo";
+import { useCreateTodoMutation } from "@/hooks/mutations/useC reateTodoMutation";
 // import { useCreateTodo } from "@/store/todos";
 
 export default function TodoEditor() {
   // const createTodo = useCreateTodo();
-  const { mutate, isPending } = useMutation({
-    mutationFn: createTodo,
-    // 요청이 시작되었을 때 실행
-    onMutate: () => {
-      console.log("요청 시작");
-    },
-    // 요청이 종료되었을 때 실행
-    onSettled: () => {
-      console.log("요청 종료");
-    },
-    // 요청이 성공되었을 때 실행
-    onSuccess: (data) => {
-      console.log("success data", data);
-      window.location.reload();
-    },
-    // 요청이 실패했을 때 실행
-    onError: (error) => {
-      window.alert(error.message);
-      window.alert("요청이 실패했습니다.");
-    },
-  });
+  const { mutate, isPending } = useCreateTodoMutation();
 
   const [content, setContent] = useState("");
 
