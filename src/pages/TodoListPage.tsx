@@ -3,7 +3,7 @@ import TodoEditor from "@/components/todolist/TodoEditor";
 import TodoItem from "@/components/todolist/TodoItem";
 import { useTodosData } from "@/hooks/queries/useTodos.data";
 import { API_URL } from "@/lib/constants";
-import { useTodos } from "@/store/todos";
+// import { useTodos } from "@/store/todos";
 import type { Todo } from "@/type/types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";

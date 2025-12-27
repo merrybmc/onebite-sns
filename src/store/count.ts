@@ -1,21 +1,22 @@
 import { create } from "zustand";
-import {
-  combine,
-  subscribeWithSelector,
-  persist,
-  createJSONStorage,
-  devtools,
-} from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+import { combine } from "zustand/middleware";
 
-type Store = {
-  count: number;
-  actions: {
-    increase: () => void;
-    decrease: () => void;
-  };
-};
-
+export const useCountStore = create(
+  combine({ count: 0 }, (set, get) => ({
+    actions: {
+      increase: () => {
+        set((state) => ({
+          count: state.count + 1,
+        }));
+      },
+      decrease: () => {
+        set((state) => ({
+          count: state.count - 1,
+        }));
+      },
+    },
+  })),
+);
 // combine이 객체 형태의 Store를 생성
 // 첫 번째 인수로 전달된 것은 state로 포함
 // 두 번쨰 인수로 전달된 콜백함수의 반환값은 actions으로 포함
@@ -85,93 +86,100 @@ type Store = {
 //   ),
 // );
 
-export const useCountStore = create(
-  devtools(
-    persist(
-      subscribeWithSelector(
-        immer(
-          combine({ count: 0 }, (set, get) => ({
-            actions: {
-              increase: () => {
-                set((state) => {
-                  state.count += 1;
-                });
-              },
-              decrease: () => {
-                set((state) => {
-                  state.count -= 1;
-                });
-              },
-            },
-          })),
-        ),
-      ),
-      {
-        name: "countStore",
+// export const useCountStore = create(
+//   devtools(
+//     persist(
+//       subscribeWithSelector(
+//         immer(
+//           combine({ count: 0 }, (set, get) => ({
+//             actions: {
+//               increase: () => {
+//                 set((state) => {
+//                   state.count += 1;
+//                 });
+//               },
+//               decrease: () => {
+//                 set((state) => {
+//                   state.count -= 1;
+//                 });
+//               },
+//             },
+//           })),
+//         ),
+//       ),
+//       {
+//         name: "countStore",
 
-        partialize: (store) => ({
-          count: store.count,
-        }),
+//         partialize: (store) => ({
+//           count: store.count,
+//         }),
 
-        storage: createJSONStorage(() => sessionStorage),
-      },
-    ),
-    {
-      name: "countStore",
-    },
-  ),
-);
-
-// 첫 번째 인수로 Store의 어떠한 값을 구독할건지를 결정하는 Selector 함수를 포함
-// 두 번째 인수는 첫 번째 인수로 전달된 값이 변경될 때마다 실행되는 기능
-// 콜백함수로 전달하며 인수는 첫 번째 인수는 변경된 이후의 구독한 값이 할당됨
-// 두 번째 인수로 변경되기 전의 구독한 값이 할당됨
-// 두 번째 인수의 콜백함수를 Listner 라고 표현한다.
-// 로그인 후 마이페이지로 이동하는 등의 사이드 이펙트에 많이 활용됨
-useCountStore.subscribe(
-  (store) => store.count,
-  (count, prevCount) => {
-    // Listner
-    console.log(count, prevCount);
-
-    // 현재 Store를 불러오거나
-    // 현재 Store의 특정 값을 업데이트 지원
-
-    // 해당 Store의 프로퍼티를 반환
-    const store = useCountStore.getState();
-    // 현재 경우 store의 count를 구독하고 있어서 무한루프에 빠지게 됨
-    // const myCount = store.count;
-    // store.actions.increase();
-    // store.actions.decrease();
-
-    // 현재 Store의 특정 값을 업데이트
-    useCountStore.setState((store) => {
-      // 현재 경우 store의 count를 구독하고 있어서 무한루프에 빠지게 됨
-      // store.count += 1;
-    });
-  },
-);
-
-// export const useCountStore = create<Store>((set, get) => {
-//   return {
-//     count: 0, // state
-
-//     actions: {
-//       increase: () => {
-//         set((store) => ({
-//           count: store.count + 1,
-//         }));
+//         storage: createJSONStorage(() => sessionStorage),
 //       },
-//       decrease: () => {
-//         set((store) => ({
-//           count: store.count - 1,
-//         }));
-//       },
+//     ),
+//     {
+//       name: "countStore",
 //     },
-//   };
-// });
+//   ),
+// );
 
-// custom Hook
+// // 첫 번째 인수로 Store의 어떠한 값을 구독할건지를 결정하는 Selector 함수를 포함
+// // 두 번째 인수는 첫 번째 인수로 전달된 값이 변경될 때마다 실행되는 기능
+// // 콜백함수로 전달하며 인수는 첫 번째 인수는 변경된 이후의 구독한 값이 할당됨
+// // 두 번째 인수로 변경되기 전의 구독한 값이 할당됨
+// // 두 번째 인수의 콜백함수를 Listner 라고 표현한다.
+// // 로그인 후 마이페이지로 이동하는 등의 사이드 이펙트에 많이 활용됨
+// useCountStore.subscribe(
+//   (store) => store.count,
+//   (count, prevCount) => {
+//     // Listner
+//     console.log(count, prevCount);
+
+//     // 현재 Store를 불러오거나
+//     // 현재 Store의 특정 값을 업데이트 지원
+
+//     // 해당 Store의 프로퍼티를 반환
+//     const store = useCountStore.getState();
+//     // 현재 경우 store의 count를 구독하고 있어서 무한루프에 빠지게 됨
+//     // const myCount = store.count;
+//     // store.actions.increase();
+//     // store.actions.decrease();
+
+//     // 현재 Store의 특정 값을 업데이트
+//     useCountStore.setState((store) => {
+//       // 현재 경우 store의 count를 구독하고 있어서 무한루프에 빠지게 됨
+//       // store.count += 1;
+//     });
+//   },
+// );
+
+// // export const useCountStore = create<Store>((set, get) => {
+// //   return {
+// //     count: 0, // state
+
+// //     actions: {
+// //       increase: () => {
+// //         set((store) => ({
+// //           count: store.count + 1,
+// //         }));
+// //       },
+// //       decrease: () => {
+// //         set((store) => ({
+// //           count: store.count - 1,
+// //         }));
+// //       },
+// //     },
+// //   };
+// // });
+
+// // custom Hook
+
+// context api = 리액트 내장 상태관리 라이브러리
+// context api 단점으로 얘는 프롭스 드릴링 일어나요
+
+// redux
+
+// 지금 한거는 zustand
 
 export const useCount = () => {
   const count = useCountStore((store) => store.count);

@@ -1,10 +1,9 @@
-import { useCount, useCountStore } from "@/store/count";
-import React from "react";
+import { useCount } from "@/store/count";
 
 export default function Viewer() {
-  // const { count } = useCountStore();
-
   const count = useCount();
+
+  console.log("Viewer");
 
   return <div>{count}</div>;
 }

@@ -1,14 +1,14 @@
 import React from "react";
 import { Button } from "../ui/button";
 import type { Todo } from "@/type/types";
-import { useDeleteTodo } from "@/store/todos";
+// import { useDeleteTodo } from "@/store/todos";
 import { Link } from "react-router";
 
 export default function TodoItem({ id, content }: Todo) {
-  const deleteTodo = useDeleteTodo();
+  // const deleteTodo = useDeleteTodo();
 
   const handleDeleteTodo = () => {
-    deleteTodo(id);
+    // deleteTodo(id);
   };
 
   return (
