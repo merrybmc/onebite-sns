@@ -1,7 +1,10 @@
 import { createTodo } from "@/api/createTodo";
-import { useMutation } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/lib/constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useCreateTodoMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: createTodo,
     onMutate: () => {
@@ -11,6 +14,8 @@ export function useCreateTodoMutation() {
       console.log("요청 끝");
     },
     onSuccess: (data) => {
+      // queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.todo.list });
       console.log("data", data);
       console.log("요청 성공");
     },

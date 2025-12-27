@@ -3,7 +3,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { createTodo } from "@/api/createTodo";
-import { useCreateTodoMutation } from "@/hooks/mutations/useC reateTodoMutation";
+import { useCreateTodoMutation } from "@/hooks/mutations/useCreateTodoMutation";
 // import { useCreateTodo } from "@/store/todos";
 
 export default function TodoEditor() {
